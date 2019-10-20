@@ -1,28 +1,43 @@
+window.onload = async () => {
   // get video dom element
-  const video = document.getElementById('my');
-        
-  // request access to webcam
-  navigator.mediaDevices.getUserMedia({video: {width: 426,height: 240}}).then((stream) => video.srcObject = stream)
-  
+  const video = await document.getElementById('my');
+
   // returns a frame encoded in base64
   const getFrame = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;    
-      console.log(canvas.width);
-      console.log(canvas.height);
-      
-      
+    const canvas = document.createElement('canvas');
+    canvas.width = 426;
+    canvas.height = 240;
+    // console.log(canvas.width);
+    // console.log(canvas.height);
 
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      const data = canvas.toDataURL('image/png');
-      return data;
+
+
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    const data = canvas.toDataURL('image/png');
+    return data;
   }
-    setTimeout(() => {
-        const data =getFrame();
+
+  // request access to webcam
+  await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: 426,
+        height: 240
+      }
+    }).then((stream) => video.srcObject = stream)
+    .then(async () => {
+      for (var i = 0; i < 25; ++i) {
+        const data = await getFrame();
         console.log(data);
-    }, 750);
-    
-    // const data =getFrame();
-    // console.log(data);
-   
+      }
+    })
+
+  // while (1) {
+  //   const data = await getFrame();
+  //   console.log(data);
+  // }
+  // setTimeout(() => {
+  // }, 75);
+
+  // const data =getFrame();
+  // console.log(data);
+}
